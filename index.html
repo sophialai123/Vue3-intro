@@ -13,20 +13,21 @@
 <body>
   <div id="app">
     <div class="nav-bar"></div>
-    <!-- print out the data -->
-    <div class="cart">Cart({{ cart }})</div>
+    <!-- print out the data and how many items in the cart -->
+    <div class="cart">Cart({{ cart.length }})</div>
 
-    <!-- display component name and v-bind the props-->
-    <product-display :premuim="premuim"></product-display>
-    <product-display :premuim="premuim"></product-display>
-    <product-display :premuim="premuim"></product-display>
-
+    <!-- display component name and v-bind or: the props,
+    @add-to-cart listening event is child, 
+    and updateCart in the app parent method-->
+    <product-display :premuim="premuim" @add-to-cart="updateCart"></product-display>
    
   </div>
   <!-- Import Js -->
   <script src="./main.js"></script>
   <!-- Import Component -->
   <script src="./components/ProductDisplay.js"></script>
+  <script src="./components/ReviewForm.js"></script>
+  <script src="./components/ReviewList.js"></script>
   <!-- Mount App -->
   <script>
     const mountedApp = app.mount("#app")

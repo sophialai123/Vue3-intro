@@ -3,12 +3,14 @@
 const app = Vue.createApp({
   data() {
     return {
-      cart: 0,
-      premuim: false //props
+      cart: [],
+      premuim: true //props
 
     }
   },
   methods: {
-
+    updateCart(id) {
+      this.cart.push(id)
+    }
   }
 })

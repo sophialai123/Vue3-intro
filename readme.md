@@ -35,6 +35,7 @@ We can combine the `v-if` directive with its sister directive `v-else` to displa
 
 ---
 ### Show and Hide
+
 The `v-show` directive is used for toggling an element’s visibility instead of adding and removing the element from the DOM entirely, like `v-if` does.
 
 As you might imagine, this is a more performant option if you have something that’s toggling off and on the screen often. We can verify this by setting inStock to `false` and viewing the element in the browser’s Developer Tools. When `v-show` is used, we can see that the element is still present in the DOM, but it’s now hidden with an inline style of `display: none`; added to it.
@@ -124,4 +125,16 @@ Class Binding
 
 The first argument is the component name, `'product-display'` in this case, and the second argument is an object to configure our component (similar to the options object used to configure our root Vue app).
 
-#### Template
+## Emitting the event
+To emit that event, **telling the parent that it happened**. Let’s add this ability within our product-display component, by amending the addToCart() method.
+```
+methods: {
+  addToCart() {
+    this.$emit('add-to-cart')
+  }
+  ...
+ }
+```
+
+
+We’ll write `this.$emit()` and emit an event called 'add-to-cart'. So when the button is clicked, we’re emitting, or bubbling up, that event. We can listen for that event from within the parent scope, where we’re using product-display, by adding a listener: @add-to-cart

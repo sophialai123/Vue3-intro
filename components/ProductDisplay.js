@@ -2,6 +2,7 @@
 app.component('product-display', {
   //props from main js
   props: {
+    //add type here
     premuim: {
       type: Boolean,
       required: false
@@ -16,11 +17,10 @@ app.component('product-display', {
         <img :src="image">
     </div>
     <div class="product-info">
-      <h1>{{ product }}</h1>
+      <h1>{{ title }}</h1>
       <p>Shipping: {{shipping}}</p>
       <!-- if inStock is false, we’ll see “Out of Stock” -->
-      <p v-if="inventory > 10">In Stock</p>
-      <p v-else-if="inventory <= 10 && inventory > 0">Stocks are less than 10</p>
+      <p v-if="inStock">In Stock</p>
       <p v-else>Out Of Stock</p>
       <ul>
         <!-- Inside the v-for expression, we wrote: detail in details. looping through it to print out a new li -->
@@ -28,43 +28,53 @@ app.component('product-display', {
       </ul>
       <!-- key atttribute for unqie id in the array -->
       <div 
-      v-for="variant in variants" :key="variant.id" 
-      @mouseover=" updatedImage(variant.image)"
+      v-for="(variant,index) in variants" :key="variant.id" 
+      @mouseover=" updatedVariant(index)"
       class="color-circle"
       :style="{backgroundColor: variant.color}" 
       ></div>
-      <button class="button" v-on:click="addToCart" :disabled="!inventory" :class="{disabledButton:!inventory}">Add to Cart</button>
+      <button class="button" v-on:click="addToCart" :disabled="!inStock" :class="{disabledButton:! inStock}">Add to Cart</button>
     </div>
   </div>
-</div> `
+  <!--  display the review on the page and add review's props 
+  only show if the reviews have a length -->
+  <review-list v-if="reviews.length" :reviews="reviews" ></review-list>
+  <!-- Review Form and listening event -->
+  <review-form @review-submitted="addReview"></review-form>
+</div> 
+`
   , data() {
     return {
       product: "Socks",
       brand: 'Vue Mastery',
       selectedVariant: 0,
-      inventory: 100,
       details: ['50% cotton', '30% wool', '20% polyester'],
       variants: [
         { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity: 50 },
         { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 0 }
-      ]
+      ],
+      reviews: []
     }
   },
   methods: {
     addToCart() {
-      this.cart += 1
+      //tell the parent app what happended
+      this.$emit('add-to-cart', this.variants[this.selectedVariant].id)
     },
-    updatedImage(variantImage) {
-      this.image = variantImage
+    updatedVariant(index) {
+      this.selectedVariant = index
+      console.log(index)
     },
-
-
+    addReview(review) {
+      this.reviews.push(review)
+    }
   },
   computed: {
 
     title() {
       return this.brand + ' ' + this.product
     },
+    //use the index to get the image
     image() {
       return this.variants[this.selectedVariant].image
     },
@@ -78,6 +88,5 @@ app.component('product-display', {
       return 2.99
     }
   }
-
 })
 
